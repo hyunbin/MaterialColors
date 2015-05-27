@@ -29,8 +29,8 @@ public class ColorParse {
         return ans;
     }
 
-    // http://stackoverflow.com/questions/6334311/whats-the-best-way-to-round-a-color-object-to-the-nearest-color-constant
-    // formula comes from: http://www.compuphase.com/cmetric.htm
+    /* http://stackoverflow.com/questions/6334311/whats-the-best-way-to-round-a-color-object-to-the-nearest-color-constant
+     * formula comes from: http://www.compuphase.com/cmetric.htm */
     public static double colorDistance(int c1, int c2) {
         int red1 = getRed(c1);
         int red2 = getRed(c2);
