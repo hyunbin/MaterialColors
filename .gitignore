@@ -9,6 +9,7 @@
 # Generated files
 bin/
 gen/
+out/
 
 # Local configuration files
 *.iml
