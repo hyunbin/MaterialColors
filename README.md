@@ -15,8 +15,8 @@ All color parsing methods are static, so there is no need to initialize an objec
 ```java
 /**
  * Calculates closest material color based on input color
- * @param color the hex value of the color to be materialized
- * @param refine set true to return the most accurate material color, set false to return a default 500 value
+ * @param color: the hex value of the color to be materialized
+ * @param refine: set true to return the most accurate material color, set false to return a default 500 value
  */
 ColorParse.approximateColor(int color, boolean refine);
 ```
@@ -24,8 +24,8 @@ ColorParse.approximateColor(int color, boolean refine);
 ```java
 /**
  * Refines the color approximation by looking through an identified 500 value's family
- * @param color the hex value of the color to be materialized
- * @param identifier the index for fullPalette, identifies the color family based on 500 value
+ * @param color: the hex value of the color to be materialized
+ * @param identifier: the index for fullPalette, identifies the color family based on 500 value
 */
 ColorParse.refine(int color, int identifier);
 ```
