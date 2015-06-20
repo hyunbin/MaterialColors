@@ -1,2 +1,18 @@
+# IntelliJ Files
+.idea/
+.DS_Store
+/captures
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+
+# Local configuration files
+*.iml
+
+# Misc
 .floo
 .flooignore
