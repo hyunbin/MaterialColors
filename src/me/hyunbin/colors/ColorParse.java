@@ -57,27 +57,27 @@ public class ColorParse {
      * TLDR: Human vision perception weighs R,G,B differently,
      *       so we need to adjust the weights of the values in our calculation
      */
-    public static double colorDistance(int c1, int c2) {
+    private static double colorDistance(int c1, int c2) {
         int red1 = getRed(c1);
         int red2 = getRed(c2);
-        int rmean = (red1 + red2) >> 1;
+        int rMean = (red1 + red2) >> 1;
         int r = red1 - red2;
         int g = getGreen(c1) - getGreen(c2);
         int b = getBlue(c1) - getBlue(c2);
-        return Math.sqrt((((512+rmean)*r*r)>>8) + 4*g*g + (((767-rmean)*b*b)>>8));
+        return Math.sqrt((((512+rMean)*r*r)>>8) + 4*g*g + (((767-rMean)*b*b)>>8));
     }
 
-    public static int getRed(int color){
+    private static int getRed(int color){
         // make sure we're only dealing with 6 digit hex
         return (color & 0xffffff) >> 16;
     }
 
-    public static int getGreen(int color){
+    private static int getGreen(int color){
         // make sure we're only dealing with 6 digit hex
         return (color & 0x00ffff) >> 8;
     }
 
-    public static int getBlue(int color){
+    private static int getBlue(int color){
         // make sure we're only dealing with 6 digit hex
         return color & 0x0000ff;
     }

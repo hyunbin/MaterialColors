@@ -16,4 +16,5 @@ out/
 
 # Misc
 .floo
-.flooignore
+.flooignore.idea/misc.xml
+./idea/workspace.xml
