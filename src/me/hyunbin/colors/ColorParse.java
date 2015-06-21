@@ -49,8 +49,26 @@ public class ColorParse {
                 bestIndex = i;
             }
         }
-        if(!refine) return Integer.toHexString(ans);
-        else return Integer.toHexString(refine(color, bestIndex));
+        if(!refine) return Integer.toHexString(ans).toUpperCase();
+        else return Integer.toHexString(refine(color, bestIndex)).toUpperCase();
+    }
+
+    /**
+     * Returns the full material color family palette of the input color
+     * @param color the hex value of the color to find the family palette of
+     */
+    public static int[] getColorFamily(int color) {
+        double curDistance;
+        double bestDistance = Double.MAX_VALUE;
+        int bestIndex = 0;
+        for(int i = 0; i < mainPalette.length; i++){
+            curDistance = colorDistance(color, mainPalette[i]);
+            if(curDistance < bestDistance){
+                bestDistance = curDistance;
+                bestIndex = i;
+            }
+        }
+        return fullPalette[bestIndex];
     }
 
     /**
@@ -147,6 +165,14 @@ public class ColorParse {
     public static String approximateColorStr(String color, boolean refine) {
         int c = hexstringToInt(color);
         return approximateColorStr(c, refine);
+    }
+
+    /**
+     * Allows to use getColorFamily with a string hex input
+     */
+    public static int[] getColorFamily(String color) {
+        int c = hexstringToInt(color);
+        return getColorFamily(c);
     }
 
     /*
