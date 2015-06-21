@@ -31,11 +31,11 @@ All color parsing methods are static, so there is no need to initialize an objec
 ```java
   ColorParse.approximateColor(int color, boolean refine);
 ```
-Example: 
+**Example:** 
 
-`ColorParse(0xADCF83, true)` returns `AED581`, the most accurate closest material color
+`ColorParse.approximateColor(0xADCF83, true)` returns `AED581`, the most accurate closest material color
 
-`ColorParse(0xADCF83, false)` returns `8BC34A`, the main 500 value of the closest material color's family
+`ColorParse.approximateColor(0xADCF83, false)` returns `8BC34A`, the main 500 value of the closest material color's family
 
 =============
 
@@ -43,9 +43,9 @@ Example:
 ```java
   ColorParse.approximateColor(int color);
 ```
-Example: 
+**Example:** 
 
-`ColorParse(0xADCF83)` returns `AED581`, the most accurate closest material color
+`ColorParse.approximateColor(0xADCF83)` returns `AED581`, the most accurate closest material color
 
 =============
 
@@ -55,11 +55,11 @@ String color param accepts `'#'` within the input. Both `#ADCF83` and `ADCF83` w
 ```java
   ColorParse.approximateColor(String color, boolean refine);
 ```
-Example: 
+**Example:**
 
-`ColorParse("#ADCF83", true)` returns `AED581`, the most accurate closest material color
+`ColorParse.approximateColor("#ADCF83", true)` returns `AED581`, the most accurate closest material color
 
-`ColorParse("ADCF83", false)` returns `8BC34A`, the main 500 value of the closest material color's family
+`ColorParse.approximateColor("ADCF83", false)` returns `8BC34A`, the main 500 value of the closest material color's family
 
 =============
 
@@ -69,9 +69,9 @@ String color param accepts `'#'` within the input. Both `#ADCF83` and `ADCF83` w
 ```java
   ColorParse.approximateColor(String color);
 ```
-Example: 
+**Example:**
 
-`ColorParse("#ADCF83")` returns `AED581`, the most accurate closest material color
+`ColorParse.approximateColor("#ADCF83")` returns `AED581`, the most accurate closest material color
 
 ### approximateColorStr()
 
