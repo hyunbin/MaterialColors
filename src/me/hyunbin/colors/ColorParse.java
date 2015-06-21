@@ -6,8 +6,8 @@ package me.hyunbin.colors;
  */
 public class ColorParse {
 
-    public static final int[] mainPalette = Palettes.mainPalette;
-    public static final int[][] fullPalette = Palettes.fullPalette;
+    private static final int[] mainPalette = Palettes.mainPalette;
+    private static final int[][] fullPalette = Palettes.fullPalette;
 
     /**
      * Calculates closest material color based on input color
@@ -27,7 +27,7 @@ public class ColorParse {
                 bestIndex = i;
             }
         }
-        if(!refine) return ans;
+        if(!refine) return Integer.valueOf(Integer.toHexString(ans), 16);
         else return refine(color, bestIndex);
     }
 
@@ -36,7 +36,7 @@ public class ColorParse {
      * @param color the hex value of the color to be materialized
      * @param identifier the index for fullPalette, identifies the color family based on 500 value
      */
-    public static int refine(int color, int identifier) {
+    private static int refine(int color, int identifier) {
         int ans = 0;
         double curDistance;
         double bestDistance = Double.MAX_VALUE;
@@ -78,7 +78,11 @@ public class ColorParse {
         return approximateColor(c, true);
     }
 
-    public static int hexstringToInt(String hexstring) {
+    /**
+     * Converts a hex string to an int, accounts for '#'
+     * @param hexstring the color to be converted to an int
+     */
+    private static int hexstringToInt(String hexstring) {
         // if '#' is included in input, get rid of it
         if(hexstring.contains("#")) hexstring = hexstring.substring(1);
         return Integer.parseInt(hexstring, 16);
