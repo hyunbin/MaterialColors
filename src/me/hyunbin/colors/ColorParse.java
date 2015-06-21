@@ -49,8 +49,24 @@ public class ColorParse {
                 bestIndex = i;
             }
         }
-        if(!refine) return Integer.toHexString(ans).toUpperCase();
-        else return Integer.toHexString(refine(color, bestIndex)).toUpperCase();
+        if(!refine) {
+            String ret = Integer.toHexString(ans).toUpperCase();
+            // cyan and teal palettes have values with no red component (#00____),
+            // so we add "00" to the front to return a full 6 digit hex
+            if(ret.length() == 4) {
+                ret = "00" + ret;
+            }
+            return ret;
+        }
+        else {
+            String ret = Integer.toHexString(refine(color, bestIndex)).toUpperCase();
+            // cyan and teal palettes have values with no red component (#00____),
+            // so we add "00" to the front to return a full 6 digit hex
+            if(ret.length() == 4) {
+                ret = "00" + ret;
+            }
+            return ret;
+        }
     }
 
     /**
