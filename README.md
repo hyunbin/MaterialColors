@@ -73,6 +73,8 @@ String color param accepts `'#'` within the input. Both `#ADCF83` and `ADCF83` w
 
 `ColorParse.approximateColor("#ADCF83")` returns `AED581`, the most accurate closest material color
 
+=============
+
 ### approximateColorStr()
 
 Returns the same result as `approximateColor()` as a String instead of as an int. Does not include `'#'` in the return value. The same parameters and options apply. 
@@ -82,6 +84,8 @@ Returns the same result as `approximateColor()` as a String instead of as an int
 `ColorParse.approximateColorStr(0xADCF83)` returns `"AED581"`
 
 `ColorParse.approximateColorStr("#ADCF83", false)` returns `"8BC34A"`
+
+=============
 
 ### getColorFamily()
 
@@ -95,7 +99,7 @@ Returns the full material color family palette of the input color
 
 **Example:**
 
-`ColorParse.getColorFamily(0xADCF83)` returns:
+`ColorParse.getColorFamily("ADCF83")` returns:
 ```
   {
     0xF1F8E9,
@@ -110,8 +114,12 @@ Returns the full material color family palette of the input color
     0x33691E, 
     0xCCFF90, 
     0xB2FF59, 
-    0x76FF03, 0x64DD17}
+    0x76FF03, 
+    0x64DD17
+  }
 ```
+
+Notice this is the light green family from [Google's Material Color Palette](http://www.google.com/design/spec/style/color.html#color-color-palette)
 
 ## Contributors
 Made by the superhero [Varun Munjeti](https://github.com/vrunjeti) and his sidekick [Hyunbin Park](https://github.com/hyunbin) on a cold and starless night. 
