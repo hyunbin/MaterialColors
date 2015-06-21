@@ -35,7 +35,7 @@ public class ColorParse {
      * Refines the color approximation by looking through an identified 500 value's family
      * @param color the hex value of the color to be materialized
      * @param identifier the index for fullPalette, identifies the color family based on 500 value
-    */
+     */
     public static int refine(int color, int identifier) {
         int ans = 0;
         double curDistance;
@@ -49,6 +49,39 @@ public class ColorParse {
             }
         }
         return ans;
+    }
+
+    /**
+     * Wrapper function with only color param, defaults to refine
+     * @param color the hex value of the color to be materialized
+     */
+    public static int approximateColor(int color) {
+        return approximateColor(color, true);
+    }
+
+    /**
+     * Wrapper function that allows hex value to be input as a string. Accepts '#' as part of the input
+     * @param color the hex value of the color to be materialized
+     * @param refine set true to return the most accurate material color, set false to return a default 500 value
+     */
+    public static int approximateColor(String color, boolean refine) {
+        int c = hexstringToInt(color);
+        return approximateColor(c, refine);
+    }
+
+    /**
+     * Wrapper function that allows hex value to be input as a string. Accepts '#' as part of the input. Defaults to refine
+     * @param color the hex value of the color to be materialized
+     */
+    public static int approximateColor(String color) {
+        int c = hexstringToInt(color);
+        return approximateColor(c, true);
+    }
+
+    public static int hexstringToInt(String hexstring) {
+        // if '#' is included in input, get rid of it
+        if(hexstring.contains("#")) hexstring = hexstring.substring(1);
+        return Integer.parseInt(hexstring, 16);
     }
 
     /**
@@ -89,6 +122,14 @@ public class ColorParse {
         System.out.println("Blue:     " + Integer.toHexString(getBlue(color)).toUpperCase());
         System.out.println("Material: " + Integer.toHexString(approximateColor(color, false)).toUpperCase());
         System.out.println("Refined:  " + Integer.toHexString(approximateColor(color, true)).toUpperCase());
+        System.out.println("Refined2: " + Integer.toHexString(approximateColor(color)).toUpperCase());
+    }
+
+    public static void testColorParse(String color){
+        System.out.println("Input:    " + color.toUpperCase());
+        System.out.println("Material: " + Integer.toHexString(approximateColor(color, false)).toUpperCase());
+        System.out.println("Refined:  " + Integer.toHexString(approximateColor(color, true)).toUpperCase());
+        System.out.println("Refined2: " + Integer.toHexString(approximateColor(color)).toUpperCase());
     }
 
 }
