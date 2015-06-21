@@ -75,7 +75,13 @@ Example:
 
 ### approximateColorStr()
 
-Returns the same result as `approximateColor()` as a String instead of as an int. The same parameters and options apply. 
+Returns the same result as `approximateColor()` as a String instead of as an int. Does not include `'#'` in the return value. The same parameters and options apply. 
+
+**Example:**
+
+`ColorParse.approximateColorStr(0xADCF83)` returns `"AED581"`
+
+`ColorParse.approximateColorStr("#ADCF83", false)` returns `"8BC34A"`
 
 ## Contributors
 Made by the superhero [Varun Munjeti](https://github.com/vrunjeti) and his sidekick [Hyunbin Park](https://github.com/hyunbin) on a cold and starless night. 
