@@ -12,7 +12,7 @@ Alternatively, copy the following two files into your project directory:
 ## Usage
 
 **Note:** 
-Due to the nature of Java (or IntelliJ), the return value of `approximateColor` will be in base 10, even though it would make sense to return the number in base 16, as a color would be defined. The value is still the same and can be used as you normally would. If you want to see the hex value in base 16, please use the `approximateColorStr` function, but take note that this returns as a String.
+`approximateColor` will return in base 10, but is still the correct numerical value and can be used as if it were a hexidecimal. To see the return value as a hex, please use `approximateColorStr` function, which returns a String.  
 
 All color parsing methods are static, so there is no need to initialize an object. The `approximateColor` and `approximateColorStr` functions have wrapper functions that support `int` and `String` inputs with an optional `refine` parameter.
 
