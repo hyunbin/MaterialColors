@@ -73,6 +73,8 @@ String color param accepts `'#'` within the input. Both `#ADCF83` and `ADCF83` w
 
 `ColorParse.approximateColor("#ADCF83")` returns `AED581`, the most accurate closest material color
 
+=============
+
 ### approximateColorStr()
 
 Returns the same result as `approximateColor()` as a String instead of as an int. Does not include `'#'` in the return value. The same parameters and options apply. 
@@ -82,6 +84,42 @@ Returns the same result as `approximateColor()` as a String instead of as an int
 `ColorParse.approximateColorStr(0xADCF83)` returns `"AED581"`
 
 `ColorParse.approximateColorStr("#ADCF83", false)` returns `"8BC34A"`
+
+=============
+
+### getColorFamily()
+
+Returns the full material color family palette of the input color
+
+**Parameters**
+
+|   Name   |  Type  | Required? | Description |
+|:--------:|:------:|:---------:|:-----------:|
+| color | int or String | either int or String required | the 6 digit hex value of the color to be materialized. String input can include `'#'` before the hex value 
+
+**Example:**
+
+`ColorParse.getColorFamily("ADCF83")` returns:
+```
+  {
+    0xF1F8E9,
+    0xDCEDC8, 
+    0xC5E1A5, 
+    0xAED581, 
+    0x9CCC65, 
+    0x8BC34A, 
+    0x7CB342, 
+    0x689F38, 
+    0x558B2F, 
+    0x33691E, 
+    0xCCFF90, 
+    0xB2FF59, 
+    0x76FF03, 
+    0x64DD17
+  }
+```
+
+Notice this is the light green family from [Google's Material Color Palette](http://www.google.com/design/spec/style/color.html#color-color-palette)
 
 ## Contributors
 Made by the superhero [Varun Munjeti](https://github.com/vrunjeti) and his sidekick [Hyunbin Park](https://github.com/hyunbin) on a cold and starless night. 
