@@ -32,6 +32,28 @@ public class ColorParse {
     }
 
     /**
+     * Calculates closest material color based on input color and returns as String
+     * @param color the hex value of the color to be materialized
+     * @param refine set true to return the most accurate material color, set false to return a default 500 value
+     */
+    public static String approximateColorStr(int color, boolean refine){
+        int ans = 0;
+        double curDistance;
+        double bestDistance = Double.MAX_VALUE;
+        int bestIndex = 0;
+        for(int i = 0; i < mainPalette.length; i++){
+            curDistance = colorDistance(color, mainPalette[i]);
+            if(curDistance < bestDistance){
+                bestDistance = curDistance;
+                ans = mainPalette[i];
+                bestIndex = i;
+            }
+        }
+        if(!refine) return Integer.toHexString(ans);
+        else return Integer.toHexString(refine(color, bestIndex));
+    }
+
+    /**
      * Refines the color approximation by looking through an identified 500 value's family
      * @param color the hex value of the color to be materialized
      * @param identifier the index for fullPalette, identifies the color family based on 500 value
@@ -52,43 +74,6 @@ public class ColorParse {
     }
 
     /**
-     * Wrapper function with only color param, defaults to refine
-     * @param color the hex value of the color to be materialized
-     */
-    public static int approximateColor(int color) {
-        return approximateColor(color, true);
-    }
-
-    /**
-     * Wrapper function that allows hex value to be input as a string. Accepts '#' as part of the input
-     * @param color the hex value of the color to be materialized
-     * @param refine set true to return the most accurate material color, set false to return a default 500 value
-     */
-    public static int approximateColor(String color, boolean refine) {
-        int c = hexstringToInt(color);
-        return approximateColor(c, refine);
-    }
-
-    /**
-     * Wrapper function that allows hex value to be input as a string. Accepts '#' as part of the input. Defaults to refine
-     * @param color the hex value of the color to be materialized
-     */
-    public static int approximateColor(String color) {
-        int c = hexstringToInt(color);
-        return approximateColor(c, true);
-    }
-
-    /**
-     * Converts a hex string to an int, accounts for '#'
-     * @param hexstring the color to be converted to an int
-     */
-    private static int hexstringToInt(String hexstring) {
-        // if '#' is included in input, get rid of it
-        if(hexstring.contains("#")) hexstring = hexstring.substring(1);
-        return Integer.parseInt(hexstring, 16);
-    }
-
-    /**
      * http://stackoverflow.com/questions/6334311/whats-the-best-way-to-round-a-color-object-to-the-nearest-color-constant
      * formula comes from: http://www.compuphase.com/cmetric.htm
      * TLDR: Human vision perception weighs R,G,B differently,
@@ -102,6 +87,80 @@ public class ColorParse {
         int g = getGreen(c1) - getGreen(c2);
         int b = getBlue(c1) - getBlue(c2);
         return Math.sqrt((((512+rMean)*r*r)>>8) + 4*g*g + (((767-rMean)*b*b)>>8));
+    }
+
+    /*
+    * The following are wrapper functions that allow different input params and return types
+    */
+
+    /**
+     * Wrapper function with only color param, defaults to refine
+     * @param color the hex value of the color to be materialized
+     */
+    public static int approximateColor(int color) {
+        return approximateColor(color, true);
+    }
+
+    /**
+     * Wrapper function that allows hex value to be input as a string. Accepts '#' as part of the input. Defaults to refine
+     * @param color the hex value of the color to be materialized
+     */
+    public static int approximateColor(String color) {
+        int c = hexstringToInt(color);
+        return approximateColor(c, true);
+    }
+
+    /**
+     * Wrapper function that allows hex value to be input as a string. Accepts '#' as part of the input
+     * @param color the hex value of the color to be materialized
+     * @param refine set true to return the most accurate material color, set false to return a default 500 value
+     */
+    public static int approximateColor(String color, boolean refine) {
+        int c = hexstringToInt(color);
+        return approximateColor(c, refine);
+    }
+
+    /**
+     * Wrapper function with only color param, defaults to refine, returns as String
+     * @param color the hex value of the color to be materialized
+     */
+    public static String approximateColorStr(int color) {
+        return approximateColorStr(color, true);
+    }
+
+    /**
+     * Wrapper function that allows hex value to be input as a string. Accepts '#' as part of the input.
+     * Defaults to refine. Returns as String
+     * @param color the hex value of the color to be materialized
+     */
+    public static String approximateColorStr(String color) {
+        int c = hexstringToInt(color);
+        return approximateColorStr(c, true);
+    }
+
+    /**
+     * Wrapper function that allows hex value to be input as a string.
+     * Accepts '#' as part of the input. Returns as String
+     * @param color the hex value of the color to be materialized
+     * @param refine set true to return the most accurate material color, set false to return a default 500 value
+     */
+    public static String approximateColorStr(String color, boolean refine) {
+        int c = hexstringToInt(color);
+        return approximateColorStr(c, refine);
+    }
+
+    /*
+    * The following are helper functions or are for testing purposes
+    */
+
+    /**
+     * Converts a hex string to an int, accounts for '#'
+     * @param hexstring the color to be converted to an int
+     */
+    private static int hexstringToInt(String hexstring) {
+        // if '#' is included in input, get rid of it
+        if(hexstring.contains("#")) hexstring = hexstring.substring(1);
+        return Integer.parseInt(hexstring, 16);
     }
 
     private static int getRed(int color){
