@@ -10,7 +10,7 @@ Alternatively, copy the following two files into your project directory:
 2. [Palettes.java](../master/src/me/hyunbin/colors/Palettes.java), which contains material color values
 
 ## Usage
-All color parsing methods are static, so there is no need to initialize an object. The `approximateColor` function has  wrapper functions that support `int` and `String` inputs with an optional `refine` parameter.
+All color parsing methods are static, so there is no need to initialize an object. The `approximateColor` and `approximateColorStr` functions have wrapper functions that support `int` and `String` inputs with an optional `refine` parameter.
 
 ### approximateColor()
 
@@ -69,6 +69,9 @@ Example:
 
 `ColorParse("#ADCF83")` returns `AED581`, the most accurate closest material color
 
+### approximateColorStr()
+
+Returns the same result as `approximateColor()` as a String instead of as an int. The same parameters and options apply. 
 
 ## Contributors
 Made by the superhero [Varun Munjeti](https://github.com/vrunjeti) and his sidekick [Hyunbin Park](https://github.com/hyunbin) on a cold and starless night. 
