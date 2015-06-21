@@ -21,7 +21,9 @@ All color parsing methods are static, so there is no need to initialize an objec
 | color | int or String | either int or String required | the 6 digit hex value of the color to be materialized. String input can include `'#'` before the hex value 
 | refine | boolean | optional, defaults to `true` | `true` returns the most accurate material color, `false` returns the default 500 value (based on [Google's Material Color Palette](http://www.google.com/design/spec/style/color.html#color-color-palette))
 
-**Integer Color Input Using Optional `refine` Parameter**
+=============
+
+**Int Color Input With `refine`**
 ```java
   ColorParse.approximateColor(int color, boolean refine);
 ```
@@ -31,7 +33,9 @@ Example:
 
 `ColorParse(0xADCF83, false)` returns `8BC34A`, the main 500 value of the closest material color's family
 
-**Integer Color Input Not Using Optional `refine` Parameter**
+=============
+
+**Int Color Input Without `refine`**
 ```java
   ColorParse.approximateColor(int color);
 ```
@@ -39,7 +43,9 @@ Example:
 
 `ColorParse(0xADCF83)` returns `AED581`, the most accurate closest material color
 
-**String Color Input Using Optional `refine` Parameter**
+=============
+
+**String Color Input With `refine`**
 
 String color param accepts `'#'` within the input. Both `#ADCF83` and `ADCF83` will return the same result. 
 ```java
@@ -51,7 +57,9 @@ Example:
 
 `ColorParse("ADCF83", false)` returns `8BC34A`, the main 500 value of the closest material color's family
 
-**String Color Input Not Using Optional `refine` Parameter**
+=============
+
+**String Color Input Without `refine`**
 
 String color param accepts `'#'` within the input. Both `#ADCF83` and `ADCF83` will return the same result. 
 ```java
@@ -61,7 +69,6 @@ Example:
 
 `ColorParse("#ADCF83")` returns `AED581`, the most accurate closest material color
 
-That's it!
 
 ## Contributors
 Made by the superhero [Varun Munjeti](https://github.com/vrunjeti) and his sidekick [Hyunbin Park](https://github.com/hyunbin) on a cold and starless night. 
