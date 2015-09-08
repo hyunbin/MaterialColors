@@ -1,6 +1,10 @@
 # MaterialColors
 A simple library to approximate RGB colors to their Material Design counterparts.
 
+Try the live demonstration at: http://hyunbin.me/MaterialColors/  
+For Java source code, visit: https://github.com/hyunbin/MaterialColors/  
+For Javascript source code, visit: https://github.com/vrunjeti/MaterialColorizeJS
+
 ## Getting Started
 Import the [MaterialColors.jar](../master/MaterialColors.jar) at the root of this project as a dependency into your project. Ta-da!
 
