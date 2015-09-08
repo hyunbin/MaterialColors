@@ -3354,43 +3354,20 @@ var _palettes = require('./palettes');
 /**
  * Calculates closest material color based on input color
  * @param  {String}  color [the hex value of the color to be materialized]
- * @param  {Boolean} ref   [set true to return the most accurate material color, set false to return a default 500 value]
  * @return {String}        [the hex value of the closest calculated color]
  */
-var approximateColor = function approximateColor(color, ref) {
-  color = hexstrToNum(color);
-  var ans = 0,
-      curDistance = undefined,
-      bestDistance = Infinity,
-      bestIndex = 0;
-  for (var i = 0; i < _palettes.palettes.mainPalette.length; i++) {
-    curDistance = colorDistance(color, _palettes.palettes.mainPalette[i]);
-    if (curDistance < bestDistance) {
-      bestDistance = curDistance;
-      ans = _palettes.palettes.mainPalette[i];
-      bestIndex = i;
-    }
-  }
-  if (!ref) return ans;else return refine(color, bestIndex);
-};
-
-/**
- * Refines the color approximation by looking through an identified 500 value's family
- * @param  {String} color      [the hex value of the color to be materialized]
- * @param  {Int}    identifier [the index for fullPalette, identifies the color family based on 500 value]
- * @return {String}            [the hex value of the closest calculated color]
- */
-var refine = function refine(color, identifier) {
+var approximateColor = function approximateColor(color) {
   color = hexstrToNum(color);
   var ans = 0,
       curDistance = undefined,
       bestDistance = Infinity;
-  var palette = _palettes.fullPalette[identifier];
-  for (var i = 0; i < palette.length; i++) {
-    curDistance = colorDistance(color, palette[i]);
-    if (curDistance < bestDistance) {
-      bestDistance = curDistance;
-      ans = palette[i];
+  for (var i = 0; i < _palettes.fullPalette.length; i++) {
+    for (var j = 0; j < _palettes.fullPalette[i].length; j++) {
+      curDistance = colorDistance(color, _palettes.fullPalette[i][j]);
+      if (curDistance < bestDistance) {
+        bestDistance = curDistance;
+        ans = _palettes.fullPalette[i][j];
+      }
     }
   }
   return ans;
@@ -3426,18 +3403,16 @@ var colorDistance = function colorDistance(c1, c2) {
  * @return {Array}        [the full material color family palette of the input color]
  */
 var getColorFamily = function getColorFamily(color) {
-  color = hexstrToNum(color);
-  var curDistance = undefined,
-      bestDistance = Infinity,
-      bestIndex = 0;
-  for (var i = 0; i < _palettes.palettes.mainPalette.length; i++) {
-    curDistance = colorDistance(color, _palettes.palettes.mainPalette[i]);
-    if (curDistance < bestDistance) {
-      bestDistance = curDistance;
-      bestIndex = i;
+  var match = approximateColor(color);
+  var correctIndex = undefined;
+  for (var i = 0; i < _palettes.fullPalette.length; i++) {
+    for (var j = 0; j < _palettes.fullPalette[i].length; j++) {
+      if (match === _palettes.fullPalette[i][j]) {
+        correctIndex = i;
+      }
     }
   }
-  return _palettes.fullPalette[bestIndex];
+  return _palettes.fullPalette[correctIndex];
 };
 
 var getRed = function getRed(color) {
@@ -3464,9 +3439,11 @@ var hexstrToNum = function hexstrToNum(input) {
 
 exports['default'] = {
   approximateColor: approximateColor,
-  refine: refine,
   colorDistance: colorDistance,
-  getColorFamily: getColorFamily
+  getColorFamily: getColorFamily,
+  getRed: getRed,
+  getGreen: getGreen,
+  getBlue: getBlue
 };
 module.exports = exports['default'];
 },{"./palettes":5}],4:[function(require,module,exports){
@@ -23354,7 +23331,7 @@ var ColorPicker = (function (_React$Component) {
     _get(Object.getPrototypeOf(ColorPicker.prototype), 'constructor', this).call(this, props);
     this.state = {
       value: props['default'],
-      materialValue: _materialcolorize2['default'].approximateColor(props['default'], true)
+      materialValue: _materialcolorize2['default'].approximateColor(props['default'])
     };
   }
 
@@ -23365,7 +23342,7 @@ var ColorPicker = (function (_React$Component) {
       if (isColor) {
         this.setState({
           value: event.target.value,
-          materialValue: _materialcolorize2['default'].approximateColor(event.target.value, true)
+          materialValue: _materialcolorize2['default'].approximateColor(event.target.value)
         });
       } else {
         this.setState({

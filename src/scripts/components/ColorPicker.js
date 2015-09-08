@@ -15,7 +15,7 @@ export default class ColorPicker extends React.Component {
     super(props);
     this.state = {
       value: props.default,
-      materialValue: MaterialColors.approximateColor(props.default, true)
+      materialValue: MaterialColors.approximateColor(props.default)
     };
   }
 
@@ -24,7 +24,7 @@ export default class ColorPicker extends React.Component {
     if(isColor){
       this.setState({
         value: event.target.value,
-        materialValue: MaterialColors.approximateColor(event.target.value, true)
+        materialValue: MaterialColors.approximateColor(event.target.value)
       });
     }
     else {
