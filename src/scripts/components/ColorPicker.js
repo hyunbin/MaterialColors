@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import MaterialColors from 'materialcolorize'
+import mc from 'materialcolorize'
 
 export default class ColorPicker extends React.Component {
 
@@ -10,12 +10,13 @@ export default class ColorPicker extends React.Component {
    * value - String representation of input color
    * materialValue - String representation of closest Material color
    */
-  
+
   constructor(props){
     super(props);
     this.state = {
       value: props.default,
-      materialValue: MaterialColors.approximateColor(props.default)
+      materialValue: mc.approximateColor(props.default),
+      materialColorFamily: mc.getColorFamily(props.default)
     };
   }
 
@@ -24,7 +25,7 @@ export default class ColorPicker extends React.Component {
     if(isColor){
       this.setState({
         value: event.target.value,
-        materialValue: MaterialColors.approximateColor(event.target.value)
+        materialValue: mc.approximateColor(event.target.value)
       });
     }
     else {
@@ -53,11 +54,25 @@ export default class ColorPicker extends React.Component {
     let { value } = this.state;
     return (
       <div>
-        <input type="text" 
-          onChange={this.handleChange.bind(this)} 
-          defaultValue={value} />
-        <h4 style={this.dynamics}> Input: {this.state.value} </h4>
-        <h4 style={this.materialDynamics}> Output: {this.state.materialValue} </h4>
+        <div className="row">
+          <div className="col m4">
+            <label htmlFor="inputHex">Input</label>
+            <input type="text" id="inputHex"
+              onChange={this.handleChange.bind(this)}
+              defaultValue={value} />
+          </div>
+          <div className="col m4">
+            <h4> Output: #{this.state.materialValue} </h4>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col m4 s12">
+            <div className="colorBox" style={this.dynamics}></div>
+          </div>
+          <div className="col m4 s12">
+            <div className="colorBox" style={this.materialDynamics}></div>
+          </div>
+        </div>
       </div>
     );
   }

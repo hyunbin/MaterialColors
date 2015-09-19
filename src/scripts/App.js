@@ -14,10 +14,12 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <h1> Material Colors </h1>
-        <body> Input a hex representation of a color here, 
-          and the closest material color will be returned. </body>
-        <ColorPicker default='88ff00'/>
+        <body>
+          <h1> Material Colorize </h1>
+          <p>Input a hex representation of a color here, and the closest material color will be returned.</p>
+
+        </body>
+        <ColorPicker default='4AAF50'/>
       </div>
     );
   }

@@ -31,7 +31,9 @@ function drainQueue() {
         currentQueue = queue;
         queue = [];
         while (++queueIndex < len) {
-            currentQueue[queueIndex].run();
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
         }
         queueIndex = -1;
         len = queue.length;
@@ -83,7 +85,6 @@ process.binding = function (name) {
     throw new Error('process.binding is not supported');
 };
 
-// TODO(shtylman)
 process.cwd = function () { return '/' };
 process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
@@ -23259,16 +23260,20 @@ var App = (function (_React$Component) {
         'div',
         null,
         _react2['default'].createElement(
-          'h1',
-          null,
-          ' Material Colors '
-        ),
-        _react2['default'].createElement(
           'body',
           null,
-          ' Input a hex representation of a color here, and the closest material color will be returned. '
+          _react2['default'].createElement(
+            'h1',
+            null,
+            ' Material Colorize '
+          ),
+          _react2['default'].createElement(
+            'p',
+            null,
+            'Input a hex representation of a color here, and the closest material color will be returned.'
+          )
         ),
-        _react2['default'].createElement(_components.ColorPicker, { 'default': '88ff00' })
+        _react2['default'].createElement(_components.ColorPicker, { 'default': '4AAF50' })
       );
     }
   }], [{
@@ -23331,7 +23336,8 @@ var ColorPicker = (function (_React$Component) {
     _get(Object.getPrototypeOf(ColorPicker.prototype), 'constructor', this).call(this, props);
     this.state = {
       value: props['default'],
-      materialValue: _materialcolorize2['default'].approximateColor(props['default'])
+      materialValue: _materialcolorize2['default'].approximateColor(props['default']),
+      materialColorFamily: _materialcolorize2['default'].getColorFamily(props['default'])
     };
   }
 
@@ -23359,22 +23365,46 @@ var ColorPicker = (function (_React$Component) {
       return _react2['default'].createElement(
         'div',
         null,
-        _react2['default'].createElement('input', { type: 'text',
-          onChange: this.handleChange.bind(this),
-          defaultValue: value }),
         _react2['default'].createElement(
-          'h4',
-          { style: this.dynamics },
-          ' Input: ',
-          this.state.value,
-          ' '
+          'div',
+          { className: 'row' },
+          _react2['default'].createElement(
+            'div',
+            { className: 'col m4' },
+            _react2['default'].createElement(
+              'label',
+              { htmlFor: 'inputHex' },
+              'Input'
+            ),
+            _react2['default'].createElement('input', { type: 'text', id: 'inputHex',
+              onChange: this.handleChange.bind(this),
+              defaultValue: value })
+          ),
+          _react2['default'].createElement(
+            'div',
+            { className: 'col m4' },
+            _react2['default'].createElement(
+              'h4',
+              null,
+              ' Output: #',
+              this.state.materialValue,
+              ' '
+            )
+          )
         ),
         _react2['default'].createElement(
-          'h4',
-          { style: this.materialDynamics },
-          ' Output: ',
-          this.state.materialValue,
-          ' '
+          'div',
+          { className: 'row' },
+          _react2['default'].createElement(
+            'div',
+            { className: 'col m4 s12' },
+            _react2['default'].createElement('div', { className: 'colorBox', style: this.dynamics })
+          ),
+          _react2['default'].createElement(
+            'div',
+            { className: 'col m4 s12' },
+            _react2['default'].createElement('div', { className: 'colorBox', style: this.materialDynamics })
+          )
         )
       );
     }
