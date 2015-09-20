@@ -19,7 +19,7 @@ export default class App extends React.Component {
           <p>Input a hex representation of a color here, and the closest material color will be returned.</p>
 
         </body>
-        <ColorPicker default='4AAF50'/>
+        <ColorPicker default='4AAA58'/>
       </div>
     );
   }

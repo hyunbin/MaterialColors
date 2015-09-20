@@ -3344,9 +3344,9 @@ process.umask = function() { return 0; };
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":1}],3:[function(require,module,exports){
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
@@ -3359,19 +3359,48 @@ var _palettes = require('./palettes');
  */
 var approximateColor = function approximateColor(color) {
   color = hexstrToNum(color);
-  var ans = 0,
-      curDistance = undefined,
+  if (color === 0xFFFFFF) return "FFFFFF";
+  if (color === 0x000000) return "000000";
+  var result = 0,
+      currDistance = undefined,
       bestDistance = Infinity;
-  for (var i = 0; i < _palettes.fullPalette.length; i++) {
-    for (var j = 0; j < _palettes.fullPalette[i].length; j++) {
-      curDistance = colorDistance(color, _palettes.fullPalette[i][j]);
-      if (curDistance < bestDistance) {
-        bestDistance = curDistance;
-        ans = _palettes.fullPalette[i][j];
+  Object.keys(_palettes.Palettes).forEach(function (palette) {
+    Object.keys(_palettes.Palettes[palette]).forEach(function (materialColorWeight) {
+      var currMaterialColor = _palettes.Palettes[palette][materialColorWeight];
+      currDistance = colorDistance(color, currMaterialColor);
+      if (currDistance < bestDistance) {
+        bestDistance = currDistance;
+        result = currMaterialColor;
       }
-    }
+    });
+  });
+  return result;
+};
+
+/**
+ * Returns the full material color family palette of the input color
+ * @param  {String} color [the hex value of the color to find the family palette of]
+ * @return {Object}       [the full material color family palette of the input color]
+ */
+var getColorFamily = function getColorFamily(color) {
+  var match = approximateColor(color);
+  // Black and White aren't in a palette (per se) but are coupled together
+  if (match === '000000' || match === 'FFFFFF') {
+    return {
+      'Black': '000000',
+      'White': 'FFFFFF'
+    };
   }
-  return ans;
+  var result = undefined;
+  Object.keys(_palettes.Palettes).forEach(function (palette) {
+    Object.keys(_palettes.Palettes[palette]).forEach(function (materialColorWeight) {
+      var currMaterialColor = _palettes.Palettes[palette][materialColorWeight];
+      if (match === currMaterialColor) {
+        result = _palettes.Palettes[palette];
+      }
+    });
+  });
+  return result;
 };
 
 /**
@@ -3393,29 +3422,12 @@ var colorDistance = function colorDistance(c1, c2) {
   var r = red1 - red2;
   var g = getGreen(c1) - getGreen(c2);
   var b = getBlue(c1) - getBlue(c2);
-
-  var ans = Math.sqrt(((512 + rMean) * r * r >> 8) + 4 * g * g + ((767 - rMean) * b * b >> 8));
-  return ans;
+  return Math.sqrt(((512 + rMean) * r * r >> 8) + 4 * g * g + ((767 - rMean) * b * b >> 8));
 };
 
 /**
- * Returns the full material color family palette of the input color
- * @param  {String} color [the hex value of the color to find the family palette of]
- * @return {Array}        [the full material color family palette of the input color]
+ * Helper functions to extract r,g,b components from a hex
  */
-var getColorFamily = function getColorFamily(color) {
-  var match = approximateColor(color);
-  var correctIndex = undefined;
-  for (var i = 0; i < _palettes.fullPalette.length; i++) {
-    for (var j = 0; j < _palettes.fullPalette[i].length; j++) {
-      if (match === _palettes.fullPalette[i][j]) {
-        correctIndex = i;
-      }
-    }
-  }
-  return _palettes.fullPalette[correctIndex];
-};
-
 var getRed = function getRed(color) {
   return (color & 0xffffff) >> 16;
 };
@@ -3438,15 +3450,12 @@ var hexstrToNum = function hexstrToNum(input) {
   return parseInt(input.replace(/^#/, ''), 16);
 };
 
-exports['default'] = {
+exports["default"] = {
   approximateColor: approximateColor,
-  colorDistance: colorDistance,
   getColorFamily: getColorFamily,
-  getRed: getRed,
-  getGreen: getGreen,
-  getBlue: getBlue
+  colorDistance: colorDistance
 };
-module.exports = exports['default'];
+module.exports = exports["default"];
 },{"./palettes":5}],4:[function(require,module,exports){
 'use strict';
 
@@ -3458,9 +3467,8 @@ var _funcs = require('./funcs');
 
 exports['default'] = {
   approximateColor: _funcs.approximateColor,
-  refine: _funcs.refine,
-  colorDistance: _funcs.colorDistance,
-  getColorFamily: _funcs.getColorFamily
+  getColorFamily: _funcs.getColorFamily,
+  colorDistance: _funcs.colorDistance
 };
 module.exports = exports['default'];
 },{"./funcs":3}],5:[function(require,module,exports){
@@ -3469,33 +3477,303 @@ module.exports = exports['default'];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var palettes = {
-  mainPalette: ["F44336", "E91E63", "9C27B0", "673AB7", "3F51B5", "2196F3", "03A9F4", "00BCD4", "009688", "4CAF50", "8BC34A", "CDDC39", "FFEB3B", "FFC107", "FF9800", "FF5722", "795548", "9E9E9E", "607D8B"],
-  redPalette: ["FFEBEE", "FFCD02", "EF9A9A", "E57373", "EF5350", "F44336", "E53935", "D32F2F", "C62828", "B71C1C", "FF8A80", "FF5252", "FF1744", "D50000"],
-  pinkPalette: ["FCE4EC", "F8BBD0", "F48FB1", "F06292", "EC407A", "E91E63", "D81B60", "C2185B", "AD1457", "880E4F", "FF80AB", "FF4081", "F50057", "C51162"],
-  purplePalette: ["F3E5F5", "E1BEE7", "CE93D8", "BA68C8", "AB47BC", "9C27B0", "8E24AA", "7B1FA2", "6A1B9A", "4A148C", "EA80FC", "E040FB", "D500F9", "AA00FF"],
-  deepPurplePalette: ["EDE7F6", "D1C4E9", "B39DDB", "9575CD", "7E57C2", "673AB7", "5E35B1", "512DA8", "4527A0", "311B92", "B388FF", "7C4DFF", "651FFF", "6200EA"],
-  indigoPalette: ["E8EAF6", "C5CAE9", "9FA8DA", "7986CB", "5C6BC0", "3F51B5", "3949AB", "303F9F", "283593", "1A237E", "8C9EFF", "536DFE", "3D5AFE", "304FFE"],
-  bluePalette: ["E3F2FD", "BBDEFB", "90CAF9", "64B5F6", "42A5F5", "2196F3", "1E88E5", "1976D2", "1565C0", "0D47A1", "82B1FF", "448AFF", "2979FF", "2962FF"],
-  lightBluePalette: ["E1F5FE", "B3E5FC", "81D4fA", "4fC3F7", "29B6FC", "03A9F4", "039BE5", "0288D1", "0277BD", "01579B", "80D8FF", "40C4FF", "00B0FF", "0091EA"],
-  cyanPalette: ["E0F7FA", "B2EBF2", "80DEEA", "4DD0E1", "26C6DA", "00BCD4", "00ACC1", "0097A7", "00838F", "006064", "84FFFF", "18FFFF", "00E5FF", "00B8D4"],
-  tealPalette: ["E0F2F1", "B2DFDB", "80CBC4", "4DB6AC", "26A69A", "009688", "00897B", "00796B", "00695C", "004D40", "A7FFEB", "64FFDA", "1DE9B6", "00BFA5"],
-  greenPalette: ["E8F5E9", "C8E6C9", "A5D6A7", "81C784", "66BB6A", "4CAF50", "43A047", "388E3C", "2E7D32", "1B5E20", "B9F6CA", "69F0AE", "00E676", "00C853"],
-  lightGreenPalette: ["F1F8E9", "DCEDC8", "C5E1A5", "AED581", "9CCC65", "8BC34A", "7CB342", "689F38", "558B2F", "33691E", "CCFF90", "B2FF59", "76FF03", "64DD17"],
-  limePalette: ["F9FBE7", "F0F4C3", "E6EE9C", "DCE775", "D4E157", "CDDC39", "C0CA33", "A4B42B", "9E9D24", "827717", "F4FF81", "EEFF41", "C6FF00", "AEEA00"],
-  yellowPalette: ["FFFDE7", "FFF9C4", "FFF590", "FFF176", "FFEE58", "FFEB3B", "FDD835", "FBC02D", "F9A825", "F57F17", "FFFF82", "FFFF00", "FFEA00", "FFD600"],
-  amberPalette: ["FFF8E1", "FFECB3", "FFE082", "FFD54F", "FFCA28", "FFC107", "FFB300", "FFA000", "FF8F00", "FF6F00", "FFE57F", "FFD740", "FFC400", "FFAB00"],
-  orangePalette: ["FFF3E0", "FFE0B2", "FFCC80", "FFB74D", "FFA726", "FF9800", "FB8C00", "F57C00", "EF6C00", "E65100", "FFD180", "FFAB40", "FF9100", "FF6D00"],
-  deepOrangePalette: ["FBE9A7", "FFCCBC", "FFAB91", "FF8A65", "FF7043", "FF5722", "F4511E", "E64A19", "D84315", "BF360C", "FF9E80", "FF6E40", "FF3D00", "DD2600"],
-  brownPalette: ["EFEBE9", "D7CCC8", "BCAAA4", "A1887F", "8D6E63", "795548", "6D4C41", "5D4037", "4E342E", "3E2723"],
-  greyPalette: ["FAFAFA", "F5F5F5", "EEEEEE", "E0E0E0", "BDBDBD", "9E9E9E", "757575", "616161", "424242", "212121", "000000", "ffffff"],
-  blueGreyPalette: ["ECEFF1", "CFD8DC", "B0BBC5", "90A4AE", "78909C", "607D8B", "546E7A", "455A64", "37474F", "263238"]
+var Palettes = {
+  "redPalette": {
+    "50": "FFEBEE",
+    "100": "FFCD02",
+    "200": "EF9A9A",
+    "300": "E57373",
+    "400": "EF5350",
+    "500": "F44336",
+    "600": "E53935",
+    "700": "D32F2F",
+    "800": "C62828",
+    "900": "B71C1C",
+    "A100": "FF8A80",
+    "A200": "FF5252",
+    "A400": "FF1744",
+    "A700": "D50000"
+  },
+  "pinkPalette": {
+    "50": "FCE4EC",
+    "100": "F8BBD0",
+    "200": "F48FB1",
+    "300": "F06292",
+    "400": "EC407A",
+    "500": "E91E63",
+    "600": "D81B60",
+    "700": "C2185B",
+    "800": "AD1457",
+    "900": "880E4F",
+    "A100": "FF80AB",
+    "A200": "FF4081",
+    "A400": "F50057",
+    "A700": "C51162"
+  },
+  "purplePalette": {
+    "50": "F3E5F5",
+    "100": "E1BEE7",
+    "200": "CE93D8",
+    "300": "BA68C8",
+    "400": "AB47BC",
+    "500": "9C27B0",
+    "600": "8E24AA",
+    "700": "7B1FA2",
+    "800": "6A1B9A",
+    "900": "4A148C",
+    "A100": "EA80FC",
+    "A200": "E040FB",
+    "A400": "D500F9",
+    "A700": "AA00FF"
+  },
+  "deepPurplePalette": {
+    "50": "EDE7F6",
+    "100": "D1C4E9",
+    "200": "B39DDB",
+    "300": "9575CD",
+    "400": "7E57C2",
+    "500": "673AB7",
+    "600": "5E35B1",
+    "700": "512DA8",
+    "800": "4527A0",
+    "900": "311B92",
+    "A100": "B388FF",
+    "A200": "7C4DFF",
+    "A400": "651FFF",
+    "A700": "6200EA"
+  },
+  "indigoPalette": {
+    "50": "E8EAF6",
+    "100": "C5CAE9",
+    "200": "9FA8DA",
+    "300": "7986CB",
+    "400": "5C6BC0",
+    "500": "3F51B5",
+    "600": "3949AB",
+    "700": "303F9F",
+    "800": "283593",
+    "900": "1A237E",
+    "A100": "8C9EFF",
+    "A200": "536DFE",
+    "A400": "3D5AFE",
+    "A700": "304FFE"
+  },
+  "bluePalette": {
+    "50": "E3F2FD",
+    "100": "BBDEFB",
+    "200": "90CAF9",
+    "300": "64B5F6",
+    "400": "42A5F5",
+    "500": "2196F3",
+    "600": "1E88E5",
+    "700": "1976D2",
+    "800": "1565C0",
+    "900": "0D47A1",
+    "A100": "82B1FF",
+    "A200": "448AFF",
+    "A400": "2979FF",
+    "A700": "2962FF"
+  },
+  "lightBluePalette": {
+    "50": "E1F5FE",
+    "100": "B3E5FC",
+    "200": "81D4fA",
+    "300": "4fC3F7",
+    "400": "29B6FC",
+    "500": "03A9F4",
+    "600": "039BE5",
+    "700": "0288D1",
+    "800": "0277BD",
+    "900": "01579B",
+    "A100": "80D8FF",
+    "A200": "40C4FF",
+    "A400": "00B0FF",
+    "A700": "0091EA"
+  },
+  "cyanPalette": {
+    "50": "E0F7FA",
+    "100": "B2EBF2",
+    "200": "80DEEA",
+    "300": "4DD0E1",
+    "400": "26C6DA",
+    "500": "00BCD4",
+    "600": "00ACC1",
+    "700": "0097A7",
+    "800": "00838F",
+    "900": "006064",
+    "A100": "84FFFF",
+    "A200": "18FFFF",
+    "A400": "00E5FF",
+    "A700": "00B8D4"
+  },
+  "tealPalette": {
+    "50": "E0F2F1",
+    "100": "B2DFDB",
+    "200": "80CBC4",
+    "300": "4DB6AC",
+    "400": "26A69A",
+    "500": "009688",
+    "600": "00897B",
+    "700": "00796B",
+    "800": "00695C",
+    "900": "004D40",
+    "A100": "A7FFEB",
+    "A200": "64FFDA",
+    "A400": "1DE9B6",
+    "A700": "00BFA5"
+  },
+  "greenPalette": {
+    "50": "E8F5E9",
+    "100": "C8E6C9",
+    "200": "A5D6A7",
+    "300": "81C784",
+    "400": "66BB6A",
+    "500": "4CAF50",
+    "600": "43A047",
+    "700": "388E3C",
+    "800": "2E7D32",
+    "900": "1B5E20",
+    "A100": "B9F6CA",
+    "A200": "69F0AE",
+    "A400": "00E676",
+    "A700": "00C853"
+  },
+  "lightGreenPalette": {
+    "50": "F1F8E9",
+    "100": "DCEDC8",
+    "200": "C5E1A5",
+    "300": "AED581",
+    "400": "9CCC65",
+    "500": "8BC34A",
+    "600": "7CB342",
+    "700": "689F38",
+    "800": "558B2F",
+    "900": "33691E",
+    "A100": "CCFF90",
+    "A200": "B2FF59",
+    "A400": "76FF03",
+    "A700": "64DD17"
+  },
+  "limePalette": {
+    "50": "F9FBE7",
+    "100": "F0F4C3",
+    "200": "E6EE9C",
+    "300": "DCE775",
+    "400": "D4E157",
+    "500": "CDDC39",
+    "600": "C0CA33",
+    "700": "A4B42B",
+    "800": "9E9D24",
+    "900": "827717",
+    "A100": "F4FF81",
+    "A200": "EEFF41",
+    "A400": "C6FF00",
+    "A700": "AEEA00"
+  },
+  "yellowPalette": {
+    "50": "FFFDE7",
+    "100": "FFF9C4",
+    "200": "FFF590",
+    "300": "FFF176",
+    "400": "FFEE58",
+    "500": "FFEB3B",
+    "600": "FDD835",
+    "700": "FBC02D",
+    "800": "F9A825",
+    "900": "F57F17",
+    "A100": "FFFF82",
+    "A200": "FFFF00",
+    "A400": "FFEA00",
+    "A700": "FFD600"
+  },
+  "amberPalette": {
+    "50": "FFF8E1",
+    "100": "FFECB3",
+    "200": "FFE082",
+    "300": "FFD54F",
+    "400": "FFCA28",
+    "500": "FFC107",
+    "600": "FFB300",
+    "700": "FFA000",
+    "800": "FF8F00",
+    "900": "FF6F00",
+    "A100": "FFE57F",
+    "A200": "FFD740",
+    "A400": "FFC400",
+    "A700": "FFAB00"
+  },
+  "orangePalette": {
+    "50": "FFF3E0",
+    "100": "FFE0B2",
+    "200": "FFCC80",
+    "300": "FFB74D",
+    "400": "FFA726",
+    "500": "FF9800",
+    "600": "FB8C00",
+    "700": "F57C00",
+    "800": "EF6C00",
+    "900": "E65100",
+    "A100": "FFD180",
+    "A200": "FFAB40",
+    "A400": "FF9100",
+    "A700": "FF6D00"
+  },
+  "deepOrangePalette": {
+    "50": "FBE9A7",
+    "100": "FFCCBC",
+    "200": "FFAB91",
+    "300": "FF8A65",
+    "400": "FF7043",
+    "500": "FF5722",
+    "600": "F4511E",
+    "700": "E64A19",
+    "800": "D84315",
+    "900": "BF360C",
+    "A100": "FF9E80",
+    "A200": "FF6E40",
+    "A400": "FF3D00",
+    "A700": "DD2600"
+  },
+  "brownPalette": {
+    "50": "EFEBE9",
+    "100": "D7CCC8",
+    "200": "BCAAA4",
+    "300": "A1887F",
+    "400": "8D6E63",
+    "500": "795548",
+    "600": "6D4C41",
+    "700": "5D4037",
+    "800": "4E342E",
+    "900": "3E2723"
+  },
+  "greyPalette": {
+    "50": "FAFAFA",
+    "100": "F5F5F5",
+    "200": "EEEEEE",
+    "300": "E0E0E0",
+    "400": "BDBDBD",
+    "500": "9E9E9E",
+    "600": "757575",
+    "700": "616161",
+    "800": "424242",
+    "900": "212121"
+  },
+  "blueGreyPalette": {
+    "50": "ECEFF1",
+    "100": "CFD8DC",
+    "200": "B0BBC5",
+    "300": "90A4AE",
+    "400": "78909C",
+    "500": "607D8B",
+    "600": "546E7A",
+    "700": "455A64",
+    "800": "37474F",
+    "900": "263238"
+  }
 };
-var fullPalette = [palettes.redPalette, palettes.pinkPalette, palettes.purplePalette, palettes.deepPurplePalette, palettes.indigoPalette, palettes.bluePalette, palettes.lightBluePalette, palettes.cyanPalette, palettes.tealPalette, palettes.greenPalette, palettes.lightGreenPalette, palettes.limePalette, palettes.yellowPalette, palettes.amberPalette, palettes.orangePalette, palettes.deepOrangePalette, palettes.brownPalette, palettes.greyPalette, palettes.blueGreyPalette];
 
 exports["default"] = {
-  palettes: palettes,
-  fullPalette: fullPalette
+  Palettes: Palettes
 };
 module.exports = exports["default"];
 },{}],6:[function(require,module,exports){
@@ -23273,7 +23551,7 @@ var App = (function (_React$Component) {
             'Input a hex representation of a color here, and the closest material color will be returned.'
           )
         ),
-        _react2['default'].createElement(_components.ColorPicker, { 'default': '4AAF50' })
+        _react2['default'].createElement(_components.ColorPicker, { 'default': '4AAA58' })
       );
     }
   }], [{
@@ -23326,8 +23604,9 @@ var ColorPicker = (function (_React$Component) {
 
   /*
    * State variables:
-   * value - String representation of input color
-   * materialValue - String representation of closest Material color
+   * value               - String representation of input color
+   * materialValue       - String representation of closest Material color
+   * materialColorFamily - JSON object of materialValue's family palette
    */
 
   function ColorPicker(props) {
@@ -23348,18 +23627,31 @@ var ColorPicker = (function (_React$Component) {
       if (isColor) {
         this.setState({
           value: event.target.value,
-          materialValue: _materialcolorize2['default'].approximateColor(event.target.value)
+          materialValue: _materialcolorize2['default'].approximateColor(event.target.value),
+          materialColorFamily: _materialcolorize2['default'].getColorFamily(event.target.value)
         });
       } else {
         this.setState({
           value: null,
-          materialValue: null
+          materialValue: null,
+          materialColorFamily: null
         });
+      }
+    }
+  }, {
+    key: 'displayTextColor',
+    value: function displayTextColor(color) {
+      if (_materialcolorize2['default'].colorDistance(color, '000000') < _materialcolorize2['default'].colorDistance(color, 'FFFFFF')) {
+        return 'FFFFFF';
+      } else {
+        return '000000';
       }
     }
   }, {
     key: 'render',
     value: function render() {
+      var _this = this;
+
       var value = this.state.value;
 
       return _react2['default'].createElement(
@@ -23370,7 +23662,7 @@ var ColorPicker = (function (_React$Component) {
           { className: 'row' },
           _react2['default'].createElement(
             'div',
-            { className: 'col m4' },
+            { className: 'col l4 m6' },
             _react2['default'].createElement(
               'label',
               { htmlFor: 'inputHex' },
@@ -23382,13 +23674,22 @@ var ColorPicker = (function (_React$Component) {
           ),
           _react2['default'].createElement(
             'div',
-            { className: 'col m4' },
+            { className: 'col l4 m6' },
             _react2['default'].createElement(
               'h4',
               null,
               ' Output: #',
               this.state.materialValue,
               ' '
+            )
+          ),
+          _react2['default'].createElement(
+            'div',
+            { className: 'col l4 m6' },
+            _react2['default'].createElement(
+              'h4',
+              null,
+              'Family Palette'
             )
           )
         ),
@@ -23397,13 +23698,36 @@ var ColorPicker = (function (_React$Component) {
           { className: 'row' },
           _react2['default'].createElement(
             'div',
-            { className: 'col m4 s12' },
+            { className: 'col l4 m6 s12' },
             _react2['default'].createElement('div', { className: 'colorBox', style: this.dynamics })
           ),
           _react2['default'].createElement(
             'div',
-            { className: 'col m4 s12' },
+            { className: 'col l4 m6 s12' },
             _react2['default'].createElement('div', { className: 'colorBox', style: this.materialDynamics })
+          ),
+          _react2['default'].createElement(
+            'div',
+            { className: 'col l4 m6 s12' },
+            Object.keys(this.materialColorFamily).map(function (colorWeight) {
+              var color = _this.materialColorFamily[colorWeight];
+              var textColor = _this.displayTextColor(color);
+              var familyCell = {
+                backgroundColor: '#' + color,
+                color: '#' + textColor
+              };
+              return _react2['default'].createElement(
+                'div',
+                { className: 'familyCell valign-wrapper', style: familyCell },
+                _react2['default'].createElement(
+                  'div',
+                  { className: 'center-align valign' },
+                  colorWeight,
+                  ': #',
+                  color
+                )
+              );
+            })
           )
         )
       );
@@ -23423,6 +23747,12 @@ var ColorPicker = (function (_React$Component) {
       return {
         backgroundColor: '#' + color
       };
+    }
+  }, {
+    key: 'materialColorFamily',
+    get: function get() {
+      var palette = this.state.materialColorFamily || {};
+      return palette;
     }
   }], [{
     key: 'PropTypes',

@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "es6-shim": "^0.33.0",
-    "materialcolorize": "^1.0.3",
+    "materialcolorize": "^1.1.0",
     "materialize-css": "^0.97.1",
     "react": "^0.13.3"
   }

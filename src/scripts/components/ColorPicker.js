@@ -7,8 +7,9 @@ export default class ColorPicker extends React.Component {
 
   /*
    * State variables:
-   * value - String representation of input color
-   * materialValue - String representation of closest Material color
+   * value               - String representation of input color
+   * materialValue       - String representation of closest Material color
+   * materialColorFamily - JSON object of materialValue's family palette
    */
 
   constructor(props){
@@ -25,13 +26,15 @@ export default class ColorPicker extends React.Component {
     if(isColor){
       this.setState({
         value: event.target.value,
-        materialValue: mc.approximateColor(event.target.value)
+        materialValue: mc.approximateColor(event.target.value),
+        materialColorFamily: mc.getColorFamily(event.target.value)
       });
     }
     else {
       this.setState({
         value: null,
-        materialValue: null
+        materialValue: null,
+        materialColorFamily: null
       });
     }
   }
@@ -43,34 +46,65 @@ export default class ColorPicker extends React.Component {
     };
   }
 
-  get materialDynamics(){
+  get materialDynamics() {
     let color = this.state.materialValue || 'ffffff';
     return {
       backgroundColor: '#' + color
     }
   }
 
-  render(){
+  get materialColorFamily() {
+    let palette = this.state.materialColorFamily || {};
+    return palette;
+  }
+
+  displayTextColor(color) {
+    if(mc.colorDistance(color, '000000') < mc.colorDistance(color, 'FFFFFF')) {
+      return 'FFFFFF';
+    } else {
+      return '000000';
+    }
+  }
+
+  render() {
     let { value } = this.state;
     return (
       <div>
         <div className="row">
-          <div className="col m4">
+          <div className="col l4 m6">
             <label htmlFor="inputHex">Input</label>
             <input type="text" id="inputHex"
               onChange={this.handleChange.bind(this)}
               defaultValue={value} />
           </div>
-          <div className="col m4">
+          <div className="col l4 m6">
             <h4> Output: #{this.state.materialValue} </h4>
+          </div>
+          <div className="col l4 m6">
+            <h4>Family Palette</h4>
           </div>
         </div>
         <div className="row">
-          <div className="col m4 s12">
+          <div className="col l4 m6 s12">
             <div className="colorBox" style={this.dynamics}></div>
           </div>
-          <div className="col m4 s12">
+          <div className="col l4 m6 s12">
             <div className="colorBox" style={this.materialDynamics}></div>
+          </div>
+          <div className="col l4 m6 s12">
+            {
+              Object.keys(this.materialColorFamily).map(colorWeight => {
+                let color = this.materialColorFamily[colorWeight];
+                let textColor = this.displayTextColor(color);
+                let familyCell = {
+                  backgroundColor: '#' + color,
+                  color: '#' + textColor
+                }
+                return <div className="familyCell valign-wrapper" style={ familyCell }>
+                    <div className="center-align valign">{colorWeight}: #{color}</div>
+                  </div>
+              })
+            }
           </div>
         </div>
       </div>
